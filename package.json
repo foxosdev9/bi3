@@ -1,0 +1,25 @@
+{
+  "name": "bi3",
+  "version": "1.0.0",
+  "description": "3andek chi haja lbi3 7ATHA HNA TBA3",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "bi3",
+    "products",
+    "shopify"
+  ],
+  "author": "Anass",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "morgan": "^1.10.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
