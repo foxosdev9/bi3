@@ -1,0 +1,48 @@
+const cloud = require('./cloudinary');
+const Product = require('../models/productModel');
+
+exports.createNewProduct = async (req, res) => {
+    try{
+        let image;
+        if(req.file){
+          await cloud.uploader
+           .upload(req.file.path, { folder: 'my_uploads'})
+           .then(result => {
+                image = result.secure_url
+                // req.newUrlPhoto = result.secure_url;
+        })}   
+        const newProduct = await Product.create({
+            name: req.body.name,
+            price: +req.body.price,
+            description: req.body.description,
+            categories: req.body.categories,
+            stock: req.body.stock,
+            productPhoto: image,
+        });
+        res.status(201).json({
+            status: 'success',
+            data: {
+                newProduct
+            }
+        })
+    }catch(err){
+        console.log(err.message);
+    }
+}
+
+exports.getAllProducts = async(req, res) => {
+    try{
+        const products =await Product.find();
+
+        res.status(201).json({
+            status: 'success',
+            results: products.length,
+            data: {
+                products
+            }
+        })
+
+    }catch(err){
+        console.log(err);
+    }
+}
