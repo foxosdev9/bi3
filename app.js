@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 const app = express();
 
 // Routes
@@ -9,6 +10,7 @@ const productRouter = require('./routes/productRouter');
 if(process.env.NODE_ENV === 'developement') app.use(morgan('dev'));
 
 app.use(express.json());
+app.use(cors());
 
 app.get('/favicons', (req, res) => res.status(204));
 app.get('/', (req, res) => { res.send('<h1>WELCOME TO BI3 API 😂</h1>')})
