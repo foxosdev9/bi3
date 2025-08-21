@@ -22,5 +22,9 @@ router
   .route('/')
   .get(productController.getAllProducts)
   .post(upload.single('productPhoto'), productController.createNewProduct);
+router
+   .route('/:id')
+   .patch(productController.upDateProduct)
+   .get(productController.getOneProduct)
 
 module.exports = router;
