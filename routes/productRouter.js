@@ -18,10 +18,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // const upload = multer({ dest: 'public/photos'})
+
+router.route('/top-3-girls')
+.get(productController.aliasTopGirls, productController.getAllProducts);
+
 router
   .route('/')
   .get(productController.getAllProducts)
   .post(upload.single('productPhoto'), productController.createNewProduct);
+
+
 router
    .route('/:id')
    .patch(productController.upDateProduct)

@@ -9,7 +9,8 @@ const prodSchema = new mongoose.Schema({
     productPhoto:{
         type: String,
         default: 'https://img.freepik.com/free-photo/view-mysterious-cardboard-box_23-2149603196.jpg'
-    }
+    },
+    createdAt: { type: Date, default: Date.now(), select: false}
 });
 
 const productModel = mongoose.model('Product', prodSchema);

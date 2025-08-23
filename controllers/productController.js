@@ -1,31 +1,49 @@
 const cloud = require('./cloudinary');
 const qs = require('qs');
+const APIFeatures = require('../utils/apiFeatures');
 const Product = require('../models/productModel');
+
+
+exports.aliasTopGirls = (req, res, next) => {
+    //   req.query.limit = '3';
+    //   req.query.fields = 'name,price,description';
+    //   req.query.sort = 'price';
+    req.queryOverrides = {
+     limit: '3',
+     sort: 'price',
+     fields: 'name,price,description',
+   };
+   
+  
+    next();
+
+}
 
 exports.createNewProduct = async (req, res) => {
     try{
-        let image;
-        if(req.file){
-          await cloud.uploader
-           .upload(req.file.path, { folder: 'my_uploads'})
-           .then(result => {
-                image = result.secure_url
-                // req.newUrlPhoto = result.secure_url;
-        })}   
-        const newProduct = await Product.create({
-            name: req.body.name,
-            price: +req.body.price,
-            description: req.body.description,
-            categories: req.body.categories,
-            stock: req.body.stock,
-            productPhoto: image,
-        });
-        res.status(201).json({
-            status: 'success',
-            data: {
-                newProduct
-            }
-        })
+        
+         let image;
+         if(req.file){
+           await cloud.uploader
+            .upload(req.file.path, { folder: 'my_uploads'})
+            .then(result => {
+                 image = result.secure_url
+                  req.newUrlPhoto = result.secure_url;
+         })}   
+         const newProduct = await Product.create({
+             name: req.body.name,
+             price: +req.body.price,
+             description: req.body.description,
+             categories: req.body.categories,
+             stock: +req.body.stock,
+             productPhoto: image,
+         });
+         res.status(201).json({
+             status: 'success',
+             data: {
+                 newProduct
+             }
+         })
     }catch(err){
         console.log(err.message);
     }
@@ -34,24 +52,16 @@ exports.createNewProduct = async (req, res) => {
 exports.getAllProducts = async(req, res) => {
     try{
         const qrs = qs.parse(req._parsedUrl.query);
-        
-        const queryObj = { ...qrs};
-        
-        const exludsFields = ['page', 'limit','fields','sort'];
-        exludsFields.forEach(el => delete queryObj[el]);
-      
-        let queryStr = JSON.stringify(queryObj);
+        const queryInput = { ...qrs, ...req.queryOverrides || {}};
 
-        queryStr = queryStr.replace(/\b(gte|gt|lt|lte)\b/g, match => `$${match}`);
 
-        
-
-        const query = Product.find(JSON.parse(queryStr));
-
-        const products = await query;
-
-        //console.log(Product.find(queryObj));
-        
+        const features = new APIFeatures(Product.find(), queryInput)
+             .filter()
+             .sort()
+             .limitFields()
+             .paginate();
+              
+        const products = await features.query;
 
         res.status(201).json({
             status: 'success',
@@ -62,7 +72,10 @@ exports.getAllProducts = async(req, res) => {
         })
 
     }catch(err){
-        console.log(err);
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        })
     }
 }
 
