@@ -7,6 +7,11 @@ const upload = require('../utils/upload-multer');
 router.route('/top-3-girls')
 .get(productController.aliasTopGirls, productController.getAllProducts);
 
+router.route('/stats')
+      .get(productController.getStaticProduct);
+
+router.route('/plan/:key').get(productController.getKeywordSearch);
+
 
 router
   .route('/')

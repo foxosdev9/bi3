@@ -21,10 +21,9 @@ exports.aliasTopGirls = (req, res, next) => {
 
 exports.createNewProduct = async (req, res) => {
     try{
-        
-         let image;
          
-         if(req.file){
+         let image;
+        if(req.file){
            await cloudinary.uploader
             .upload(req.file.path, { folder: 'my_uploads'})
             .then(result => {
@@ -39,6 +38,7 @@ exports.createNewProduct = async (req, res) => {
              categories: req.body.categories,
              stock: +req.body.stock,
              productPhoto: image,
+             keysWord: req.body.keysWord.split(' ')
          });
          res.status(201).json({
              status: 'success',
@@ -110,5 +110,75 @@ exports.upDateProduct = async (req, res) => {
 
     }catch(err){
        res.status(404).json({status: 'fail', message: err.message})
+    }
+}
+
+
+exports.getStaticProduct = async (req, res) => {
+    try{
+        
+       const stats = await Product.aggregate([
+        {
+            $group: {
+                _id: { $toUpper: '$categories'},
+                avgPrice: { $avg: "$price"},
+                totalStock: { $sum: "$stock"},
+                minPrice: { $min: '$price'},
+                count: { $sum: 1}
+            }
+        },
+        { $sort: { minPrice: -1}},
+        { $match: { _id: { $ne: 'FASION'}}}
+
+        //   {
+        //     $match: { price: { $gte: 300}, categories: 'sex'},
+        //   },
+        //   {
+        //     $sort: { price: -1}
+        //   }
+       ]);
+
+       res.status(200).json({
+          status: 'success',
+          data: {
+            stats: stats
+          }
+       });
+    }catch(err){
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        })
+    }
+}
+
+
+exports.getKeywordSearch = async (req, res) => {
+    try{
+        const { key } = req.params;
+
+        const stats = await Product.aggregate([
+            {
+                $unwind: '$keysWord'
+            },
+            {
+                $match: { keysWord: key }
+            },
+            {
+                $limit: 1
+            }
+        ])
+        res.status(200).json({
+          status: 'success',
+          results: stats.length,
+          data: {
+            stats: stats
+          }
+       });
+    }catch(err){
+        res.status(404).json({
+            status: 'fail',
+            message: err.message
+        })
     }
 }
