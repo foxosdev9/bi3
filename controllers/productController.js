@@ -1,7 +1,7 @@
-const cloud = require('./cloudinary');
 const qs = require('qs');
 const APIFeatures = require('../utils/apiFeatures');
 const Product = require('../models/productModel');
+const cloudinary = require('../utils/cloudinary');
 
 
 exports.aliasTopGirls = (req, res, next) => {
@@ -23,13 +23,15 @@ exports.createNewProduct = async (req, res) => {
     try{
         
          let image;
+         
          if(req.file){
-           await cloud.uploader
+           await cloudinary.uploader
             .upload(req.file.path, { folder: 'my_uploads'})
             .then(result => {
                  image = result.secure_url
                   req.newUrlPhoto = result.secure_url;
-         })}   
+         })} 
+
          const newProduct = await Product.create({
              name: req.body.name,
              price: +req.body.price,

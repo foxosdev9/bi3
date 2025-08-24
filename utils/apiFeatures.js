@@ -6,7 +6,6 @@ module.exports = class APIFeatures {
 
   filter() {
     // logic ديال filtering
-     console.log('FILLER START')
      const queryObj = { ...this.queryString };
      
      const excludedFields = ['page', 'sort', 'limit', 'fields'];
