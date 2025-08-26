@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+
 const prodSchema = new mongoose.Schema({
     name: { 
         type: String,
+        unique: true,
         required: true,
-        minLength: [20, 'Name must be a less than 20 caracteres'],
+        minLength: [4, 'Name must be a less than 20 caracteres'],
         // validate: [validator.isAlpha, 'Please name should not contain number']
     },
     slug: String,

@@ -2,6 +2,9 @@ const qs = require('qs');
 const APIFeatures = require('../utils/apiFeatures');
 const Product = require('../models/productModel');
 const cloudinary = require('../utils/cloudinary');
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/AppError');
+const mongoose = require('mongoose');
 
 
 exports.aliasTopGirls = (req, res, next) => {
@@ -19,10 +22,9 @@ exports.aliasTopGirls = (req, res, next) => {
 
 }
 
-exports.createNewProduct = async (req, res) => {
-    try{
-         
-         let image;
+
+exports.createNewProduct = catchAsync(async (req, res, next) => {
+        let image;
         if(req.file){
            await cloudinary.uploader
             .upload(req.file.path, { folder: 'my_uploads'})
@@ -30,7 +32,7 @@ exports.createNewProduct = async (req, res) => {
                  image = result.secure_url
                   req.newUrlPhoto = result.secure_url;
          })} 
-
+         
          const newProduct = await Product.create({
              name: req.body.name,
              price: +req.body.price,
@@ -38,21 +40,19 @@ exports.createNewProduct = async (req, res) => {
              categories: req.body.categories,
              stock: +req.body.stock,
              productPhoto: image,
-             keysWord: req.body.keysWord.split(' ')
+             keysWord: []
          });
+
          res.status(201).json({
              status: 'success',
              data: {
                  newProduct
              }
          })
-    }catch(err){
-        console.log(err.message);
-    }
-}
+})
 
-exports.getAllProducts = async(req, res) => {
-    try{
+exports.getAllProducts = catchAsync(async(req, res, next) => {
+    
         const qrs = qs.parse(req._parsedUrl.query);
         const queryInput = { ...qrs, ...req.queryOverrides || {}};
 
@@ -73,18 +73,20 @@ exports.getAllProducts = async(req, res) => {
             }
         })
 
-    }catch(err){
-        res.status(404).json({
-            status: 'fail',
-            message: err
-        })
-    }
-}
+})
 
-exports.getOneProduct = async (req, res) => {
-    try{
+    
+exports.getOneProduct = catchAsync(async (req, res, next) => {
+    
        const { id } = req.params;
+    //    if(!mongoose.Types.ObjectId.isValid(id)){
+    //      return next(new AppError('Invalid ID format', 400))
+    //    }
        const findProduct = await Product.findById(id);
+       
+       if(!findProduct){
+        return next(new AppError('No found Product on this ID', 404));
+       }
        res.status(200).json({
         status: 'success',
         data: {
@@ -92,26 +94,20 @@ exports.getOneProduct = async (req, res) => {
         }
        })
 
-    }catch(err){
-       res.status(404).json({status: 'fail', message: err.message})
-    }
-}
+})
 
-exports.upDateProduct = async (req, res) => {
-    try{
+exports.upDateProduct = catchAsync(async (req, res, next) => {
+    
        const { id } = req.params;
-       const upDatedProduct = await Product.findByIdAndUpdate(id, {name: req.body.name}, { new: true});
+       const upDatedProduct = await Product.findByIdAndUpdate(id, req.body, { new: true});
+       
        res.status(200).json({
         status: 'success',
         data: {
             product: upDatedProduct
         }
        })
-
-    }catch(err){
-       res.status(404).json({status: 'fail', message: err.message})
-    }
-}
+})
 
 
 exports.getStaticProduct = async (req, res) => {
