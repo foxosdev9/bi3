@@ -4,7 +4,7 @@ const Product = require('../models/productModel');
 const cloudinary = require('../utils/cloudinary');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
-const mongoose = require('mongoose');
+
 
 
 exports.aliasTopGirls = (req, res, next) => {
@@ -33,6 +33,7 @@ exports.createNewProduct = catchAsync(async (req, res, next) => {
                   req.newUrlPhoto = result.secure_url;
          })} 
          
+         
          const newProduct = await Product.create({
              name: req.body.name,
              price: +req.body.price,
@@ -52,7 +53,7 @@ exports.createNewProduct = catchAsync(async (req, res, next) => {
 })
 
 exports.getAllProducts = catchAsync(async(req, res, next) => {
-    
+        console.log(req.user);
         const qrs = qs.parse(req._parsedUrl.query);
         const queryInput = { ...qrs, ...req.queryOverrides || {}};
 

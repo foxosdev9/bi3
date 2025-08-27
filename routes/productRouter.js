@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const productController = require('../controllers/productController');
 const upload = require('../utils/upload-multer');
+const authController = require('../controllers/authController');
 
 
 router.route('/top-3-girls')
@@ -15,7 +16,7 @@ router.route('/plan/:key').get(productController.getKeywordSearch);
 
 router
   .route('/')
-  .get(productController.getAllProducts)
+  .get(authController.protect, productController.getAllProducts)
   .post(upload.single('productPhoto'), productController.createNewProduct);
 
 
