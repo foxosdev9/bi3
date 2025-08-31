@@ -1,5 +1,16 @@
 const Client = require('../models/userModel');
+const AppError = require('../utils/AppError');
+const catchAsync = require('../utils/catchAsync');
 
+
+const filterObj = (object, ...fields) => {
+    const newBodyObj = {};
+
+    Object.keys(object).forEach(el => {
+        if(fields.includes(el)) newBodyObj[el] = object[el]
+    });
+    return newBodyObj;
+}
 
 exports.getAllUsers = async (req, res) => {
    try{
@@ -38,3 +49,60 @@ exports.createUser = async (req, res) => {
         console.log(err.message);
     }
 }
+
+
+exports.updateUser = async (req, res) => {
+    try{
+        const client = await Client.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        res.status(200).json({
+            status: 'success',
+            data: {
+                client
+            }
+        })
+    }catch(err){
+        console.log(err.message);
+    }
+}
+
+exports.deleteUser = async (req, res) => {
+    try{
+        await Client.findByIdAndDelete(req.params.id);
+        res.status(204).json({
+            status: 'success',
+            data: null
+        })
+    }catch(err){
+        console.log(err.message);
+    }
+}
+
+exports.upDateMe = catchAsync(async (req, res, next) => {
+    
+    if(req.body.password || req.body.passwordConfirm){
+        return next(new AppError('This route not for update Password', 400))
+    };
+    
+    
+    const filterBody = filterObj(req.body, 'name', 'email');
+
+    const newUser = await Client.findByIdAndUpdate(req.user._id, filterBody, {new: true, runValidators: true});
+
+    res.status(200).json({
+        status: 'success',
+        data: {
+            user: newUser
+        }
+    })
+})
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+    await Client.findByIdAndUpdate(req.user._id, {active: false});
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});

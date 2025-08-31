@@ -5,6 +5,7 @@ const app = express();
 const globalErrorHandler = require('./controllers/errorController')
 const AppError = require('./utils/AppError');
 
+
 // Routes
 const userRouter = require('./routes/userRouter');
 const productRouter = require('./routes/productRouter');
