@@ -27,6 +27,18 @@ exports.getAllUsers = async (req, res) => {
    }
 }
 
+exports.getUser = catchAsync(async (req, res, next) => {
+    const client = await Client.findById(req.params.id);
+    if(!client){
+        return next(new AppError('No user found with that ID', 404));
+    }
+    res.status(200).json({
+        status: 'success',
+        data: {
+            client
+        }
+    })
+});
 
 exports.createUser = async (req, res) => {
     try{
@@ -106,3 +118,9 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
         data: null
     });
 });
+
+
+exports.getMe = (req, res, next) => {
+    req.params.id = req.user._id;
+    next();
+};
