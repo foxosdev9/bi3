@@ -95,17 +95,17 @@ exports.deleteUser = async (req, res) => {
 
 exports.upDateMe = catchAsync(async (req, res, next) => {
     
-    if(req.body.password || req.body.passwordConfirm){
-        return next(new AppError('This route not for update Password', 400))
-    };
+    // if(req.body.password || req.body.passwordConfirm){
+    //     return next(new AppError('This route not for update Password', 400))
+    // };
     
     if(req.file){
-               await cloudinary.uploader
-                .upload(req.file.path, { folder: 'my_uploads'})
-                .then(result => {
-                     image = result.secure_url
-                      req.newUrlPhoto = result.secure_url;
-    })} 
+        await cloudinary.uploader
+        .upload(req.file.path, { folder: 'my_uploads'})
+        .then(result => {
+            image = result.secure_url
+            req.newUrlPhoto = result.secure_url;
+        })} 
     
     const filterBody = filterObj({...req.body, photo: req.newUrlPhoto || undefined}, 'name', 'email', 'photo');
 
