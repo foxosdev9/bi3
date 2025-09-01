@@ -4,7 +4,7 @@ const cors = require('cors');
 const app = express();
 const globalErrorHandler = require('./controllers/errorController')
 const AppError = require('./utils/AppError');
-
+const cookieParser = require('cookie-parser');
 
 // Routes
 const userRouter = require('./routes/userRouter');
@@ -12,9 +12,11 @@ const productRouter = require('./routes/productRouter');
 
 if(process.env.NODE_ENV === 'developement') app.use(morgan('dev'));
 
+app.use(cors({ origin: ['http://localhost:3000', 'http://localhost:5173', 'https://bi3-morocco.netlify.app'], credentials: true }));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
-app.use(cors());
+
 
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/products', productRouter);

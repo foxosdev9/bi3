@@ -12,6 +12,7 @@ const $schema = {
         lowerCase: true,
         validate: [validator.isEmail, 'Please provide email']
     },
+    photo:{type: String, default: './unckown.jpg'},
     role: {
         type: String,
         enum: ['user', 'admin', 'lead--guide', 'guide'],
