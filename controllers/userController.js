@@ -1,6 +1,7 @@
 const Client = require('../models/userModel');
 const AppError = require('../utils/AppError');
 const catchAsync = require('../utils/catchAsync');
+const cloudinary = require('../utils/cloudinary');
 
 
 const filterObj = (object, ...fields) => {
@@ -98,8 +99,15 @@ exports.upDateMe = catchAsync(async (req, res, next) => {
         return next(new AppError('This route not for update Password', 400))
     };
     
+    if(req.file){
+               await cloudinary.uploader
+                .upload(req.file.path, { folder: 'my_uploads'})
+                .then(result => {
+                     image = result.secure_url
+                      req.newUrlPhoto = result.secure_url;
+    })} 
     
-    const filterBody = filterObj(req.body, 'name', 'email');
+    const filterBody = filterObj({...req.body, photo: req.newUrlPhoto || undefined}, 'name', 'email', 'photo');
 
     const newUser = await Client.findByIdAndUpdate(req.user._id, filterBody, {new: true, runValidators: true});
 
