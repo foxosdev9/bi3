@@ -15,7 +15,7 @@ const createTokenSend = (user, statusCode, res) => {
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: true,
-        sameSite: "lax" // process.env.NODE_ENV === 'production'
+        sameSite: "none" // process.env.NODE_ENV === 'production'
     });
 
     res.status(statusCode).json({
@@ -187,7 +187,7 @@ exports.logout = (req, res) => {
    res.clearCookie("jwt", {
        httpOnly: true,
        secure: true,
-       sameSite: "lax"
+       sameSite: "none"
    });
 
 res.status(200).json({ status: "success" });

@@ -2,12 +2,12 @@ require('dotenv').config({path: './config.env', debug: false});
 const app = require('./app');
 const mongoose = require('mongoose');
 
-let url_connection = 
-process.env.MONGODB_ATLAS.replace('<PASSWORD>', process.env.DB_PASSWORD);
+// let url_connection = 
+// process.env.MONGODB_ATLAS.replace('<PASSWORD>', process.env.DB_PASSWORD);
 
 
 mongoose
-.connect(url_connection)
+.connect(process.env.MONGODB_ATLAS)
 .then(db => console.log('DATABASE CONNECTED :)'))
 .catch(err => console.log(err));
 
