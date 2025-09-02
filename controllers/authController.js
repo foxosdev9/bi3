@@ -12,10 +12,10 @@ const createTokenSend = (user, statusCode, res) => {
     });
 
     res.cookie('jwt', token, {
-        expires: new Date(Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000),
+        expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         httpOnly: true,
         secure: true,
-        sameSite: "none" // process.env.NODE_ENV === 'production'
+        sameSite: "lax" // process.env.NODE_ENV === 'production'
     });
 
     res.status(statusCode).json({
@@ -68,6 +68,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     if(req.cookies.jwt){
         token = req.cookies.jwt;
     }
+    console.log(req.cookies)
     if(!token){
         return next(new AppError('You are not logged in! Please log in to get access.', 401));
     }
@@ -181,3 +182,14 @@ exports.upDatePassword = catchAsync(async (req, res, next) => {
     createTokenSend(user, 201, res);
 
 })
+
+exports.logout = (req, res) => {
+   res.clearCookie("jwt", {
+       httpOnly: true,
+       secure: true,
+       sameSite: "lax"
+   });
+
+res.status(200).json({ status: "success" });
+
+}

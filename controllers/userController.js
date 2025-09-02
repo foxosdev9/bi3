@@ -95,9 +95,9 @@ exports.deleteUser = async (req, res) => {
 
 exports.upDateMe = catchAsync(async (req, res, next) => {
     
-    // if(req.body.password || req.body.passwordConfirm){
-    //     return next(new AppError('This route not for update Password', 400))
-    // };
+     if(req.body.password || req.body.passwordConfirm){
+         return next(new AppError('This route not for update Password', 400))
+     };
     
     if(req.file){
         await cloudinary.uploader
