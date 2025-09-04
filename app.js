@@ -11,7 +11,7 @@ const userRouter = require('./routes/userRouter');
 const productRouter = require('./routes/productRouter');
 
 if(process.env.NODE_ENV === 'developement') app.use(morgan('dev'));
-
+//"https://bi3-morocco.netlify.app"
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({ origin: "https://bi3-morocco.netlify.app", credentials: true }));
