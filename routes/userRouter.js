@@ -48,6 +48,10 @@ router
 .post(userController.createUser)
 
 router
+.route('/deletePhoto')
+.patch(authController.protect, userController.deletePhoto);
+
+router
 .route('/:id')
 .patch(userController.updateUser)
 .delete(

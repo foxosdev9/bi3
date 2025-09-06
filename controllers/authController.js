@@ -14,8 +14,8 @@ const createTokenSend = (user, statusCode, res) => {
     res.cookie('jwt', token, {
         expires: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
         httpOnly: true,
-        secure: true,
-        sameSite: "none" // process.env.NODE_ENV === 'production'
+        secure: process.env.NODE_ENV === 'developement' ? undefined : true,
+        sameSite: process.env.NODE_ENV === 'developement' ? "lax" :"none" 
     });
 
     res.status(statusCode).json({
@@ -186,8 +186,8 @@ exports.upDatePassword = catchAsync(async (req, res, next) => {
 exports.logout = (req, res) => {
    res.clearCookie("jwt", {
        httpOnly: true,
-       secure: true,
-       sameSite: "none"
+       secure: process.env.NODE_ENV === 'developement' ? undefined : true,
+       sameSite: process.env.NODE_ENV === 'developement' ? "lax" :"none"
    });
 
 res.status(200).json({ status: "success" });

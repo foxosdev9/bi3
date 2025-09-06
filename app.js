@@ -14,7 +14,10 @@ if(process.env.NODE_ENV === 'developement') app.use(morgan('dev'));
 //"https://bi3-morocco.netlify.app"
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: "https://bi3-morocco.netlify.app", credentials: true }));
+app.use(cors(
+    { origin: process.env.NODE_ENV === 'developement' ? true : "https://bi3-morocco.netlify.app", 
+      credentials: true 
+}));
 app.use(express.urlencoded({extended: false}));
 
 

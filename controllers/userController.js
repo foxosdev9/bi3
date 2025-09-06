@@ -132,3 +132,12 @@ exports.getMe = (req, res, next) => {
     req.params.id = req.user._id;
     next();
 };
+
+exports.deletePhoto = async (req, res, next) => {
+    try{
+       const user = await Client.findByIdAndUpdate(req.user._id, {photo: ''}, {new: true});
+       res.status(203).json({ status: 'sucess', data: user});
+    }catch(err){
+       res.status(401).json({status: 'fail', message: err.message});
+    }
+}
