@@ -1,0 +1,38 @@
+{
+  "name": "bi3",
+  "version": "1.0.0",
+  "description": "3andek chi haja lbi3 7ATHA HNA TBA3",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "debug": "ndb server.js"
+  },
+  "keywords": [
+    "bi3",
+    "products",
+    "shopify"
+  ],
+  "author": "Anass",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^1.41.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.1",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "multer-storage-cloudinary": "^4.0.0",
+    "nodemailer": "^7.0.5",
+    "qs": "^6.14.0",
+    "validator": "^13.15.15"
+  },
+  "devDependencies": {
+    "ndb": "^1.1.5",
+    "nodemon": "^3.1.10"
+  }
+}

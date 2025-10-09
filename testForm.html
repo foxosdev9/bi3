@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>message</title>
+</head>
+<body>
+    <div class="root">
+        <form action="" id="form">
+            <input type="text" name="message" id= 'message' placeholder="enter message">
+            <button type="submit">send</button>
+        </form>
+    </div>
+    <script>
+        const message = document.getElementById('message');
+        console.log(message)
+        document.getElementById('form').addEventListener('submit', e => {
+            
+            e.preventDefault();
+            fetch('http://localhost:8080/api/v1/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                  userName: 'anasdev',
+                  userPhoto: 'not found',
+                  userID: '23444U84U389',
+                  message: message.value
+                })
+            })
+            .then(res => res.json())
+            .then(data => console.log(data))
+            .catch(err => console.error(err.message));
+        })
+    </script>
+</body>
+</html>
