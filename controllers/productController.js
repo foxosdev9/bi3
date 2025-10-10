@@ -32,17 +32,22 @@ exports.createNewProduct = catchAsync(async (req, res, next) => {
                  image = result.secure_url
                   req.newUrlPhoto = result.secure_url;
          })} 
+
          
+         let $price = +req.body.price;
          
+     
+
          const newProduct = await Product.create({
-             name: req.body.name,
-             price: +req.body.price,
+             title: req.body.title,
              description: req.body.description,
              categories: req.body.categories,
-             stock: +req.body.stock,
-             productPhoto: image,
-             keysWord: []
-         });
+             photo: image,
+             userID: req.body.userID,
+             price: $price
+        });
+
+        console.log(newProduct)
 
          res.status(201).json({
              status: 'success',

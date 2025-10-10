@@ -35,6 +35,10 @@ router
 .patch(authController.protect,upload.single('photo'), userController.upDateMe);
 
 router
+.route('/updateStatusAccount')
+.patch(authController.protect, authController.upDateStatusAccount)
+
+router
 .route('/deleteMe')
 .delete(authController.protect, userController.deleteMe);
 

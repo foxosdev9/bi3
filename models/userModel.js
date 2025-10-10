@@ -22,7 +22,7 @@ const $schema = {
         type: String,
         default: 'https://i.pinimg.com/236x/83/bc/8b/83bc8b88cf6bc4b4e04d153a418cde62.jpg'
     },
-    bio: String,
+    bio: {type: String, default: 'ecommerce ..'},
     password: {
         type: String,
         required: [true, "Please provide password"],
@@ -47,9 +47,9 @@ const $schema = {
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    statusAccount: {
-        type: String,
-        default: 'public'
+    isPrivate: {
+        type: Boolean,
+        default: false
     }
 }
 

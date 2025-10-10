@@ -3,66 +3,80 @@ const validator = require('validator');
 
 
 const prodSchema = new mongoose.Schema({
-    name: { 
-        type: String,
-        unique: true,
-        required: true,
-        minLength: [4, 'Name must be a less than 20 caracteres'],
-        // validate: [validator.isAlpha, 'Please name should not contain number']
-    },
-    slug: String,
-    price: Number,
-    categories: {
-        type: String,
-        enum: {
-            values: ['fasion', 'car', 'sex', 'phones'],
-            message: 'Please choose available catgories : FASION/CAR/SEX/PHONES'
-        }
-    },
-    stock: Number,
-    description: String,
-    secureProduct: { type: Boolean, default: false},
-    productPhoto:{
-        type: String,
-        default: 'https://img.freepik.com/free-photo/view-mysterious-cardboard-box_23-2149603196.jpg'
-    },
-    createdAt: { type: Date, default: Date.now(), select: false},
-    keysWord: [String]
-},{ 
-   toJSON: { virtuals: true},
-   toObject: { virtuals: true}
-});
-
-prodSchema.pre('save', function(next){
-    this.slug = this.name.split(' ').join('').toLowerCase();
-    this.secureProduct = this.name === 'admin' ? true : null;
-    next();
-});
-
-prodSchema.pre(/^find/, function(next){
-    this.find({ secureProduct: { $ne: true}});
-    next();
-});
-
-prodSchema.pre('aggregate', function(next){
-    this.pipeline().unshift( { $match: { secureProduct: {$ne: true}}});
-    //pipeline howa khat anabib li 7addna f had agregate pipline() method return arr of our pipline
-    // console.log(this.pipeline)
-    next();
-})
-
-prodSchema.post('save', function(doc, next){
-    // console.log('HIIII WE FINECHED', doc);
-    next();
-})
-
-prodSchema.virtual('username').get(function(){
-    return this.name + Date.now();
+     title: String,
+     photo: String,
+     userID: String,
+     description: String,
+     categories: String,
+     price: Number
 });
 
 const productModel = mongoose.model('Product', prodSchema);
 
+
 module.exports = productModel;
+
+//learning SCHEMA
+
+// const prodSchema = new mongoose.Schema({
+//     name: { 
+//         type: String,
+//         unique: true,
+//         required: true,
+//         minLength: [4, 'Name must be a less than 20 caracteres'],
+//         // validate: [validator.isAlpha, 'Please name should not contain number']
+//     },
+//     slug: String,
+//     price: Number,
+//     categories: {
+//         type: String,
+//         enum: {
+//             values: ['fasion', 'car', 'sex', 'phones'],
+//             message: 'Please choose available catgories : FASION/CAR/SEX/PHONES'
+//         }
+//     },
+//     stock: Number,
+//     description: String,
+//     secureProduct: { type: Boolean, default: false},
+//     productPhoto:{
+//         type: String,
+//         default: 'https://img.freepik.com/free-photo/view-mysterious-cardboard-box_23-2149603196.jpg'
+//     },
+//     createdAt: { type: Date, default: Date.now(), select: false},
+//     keysWord: [String]
+// },{ 
+//    toJSON: { virtuals: true},
+//    toObject: { virtuals: true}
+// });
+
+// prodSchema.pre('save', function(next){
+//     this.slug = this.name.split(' ').join('').toLowerCase();
+//     this.secureProduct = this.name === 'admin' ? true : null;
+//     next();
+// });
+
+// prodSchema.pre(/^find/, function(next){
+//     this.find({ secureProduct: { $ne: true}});
+//     next();
+// });
+
+// prodSchema.pre('aggregate', function(next){
+//     this.pipeline().unshift( { $match: { secureProduct: {$ne: true}}});
+//     //pipeline howa khat anabib li 7addna f had agregate pipline() method return arr of our pipline
+//     // console.log(this.pipeline)
+//     next();
+// })
+
+// prodSchema.post('save', function(doc, next){
+//     // console.log('HIIII WE FINECHED', doc);
+//     next();
+// })
+
+// prodSchema.virtual('username').get(function(){
+//     return this.name + Date.now();
+// });
+
+
 
 
 //VALIDATION
