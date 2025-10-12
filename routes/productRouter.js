@@ -17,7 +17,7 @@ router.route('/plan/:key').get(productController.getKeywordSearch);
 router
   .route('/')
   .get(authController.protect, productController.getAllProducts)
-  .post(upload.single('photo'), productController.createNewProduct);
+  .post(authController.protect,upload.single('photo'), productController.createNewProduct);
 
 
 

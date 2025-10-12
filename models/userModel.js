@@ -50,7 +50,8 @@ const $schema = {
     isPrivate: {
         type: Boolean,
         default: false
-    }
+    },
+    products: Array
 }
 
 const userSchema = new mongoose.Schema($schema);

@@ -4,6 +4,7 @@ const Product = require('../models/productModel');
 const cloudinary = require('../utils/cloudinary');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
+const User = require('../models/userModel');
 
 
 
@@ -35,9 +36,9 @@ exports.createNewProduct = catchAsync(async (req, res, next) => {
 
          
          let $price = +req.body.price;
-         
-     
 
+         const user = await User.findById(req.user._id);
+         
          const newProduct = await Product.create({
              title: req.body.title,
              description: req.body.description,
@@ -47,7 +48,9 @@ exports.createNewProduct = catchAsync(async (req, res, next) => {
              price: $price
         });
 
-        console.log(newProduct)
+        user.products.push(newProduct);
+
+        await user.save({validateBeforeSave: false});
 
          res.status(201).json({
              status: 'success',
