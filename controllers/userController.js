@@ -95,6 +95,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.upDateMe = catchAsync(async (req, res, next) => {
     
+
      if(req.body.password || req.body.passwordConfirm){
          return next(new AppError('This route not for update Password', 400))
      };
@@ -108,9 +109,10 @@ exports.upDateMe = catchAsync(async (req, res, next) => {
         })} 
     
     const filterBody = filterObj({...req.body, photo: req.newUrlPhoto || undefined}, 'name', 'email', 'photo', 'bio');
+    
 
     const newUser = await Client.findByIdAndUpdate(req.user._id, filterBody, {new: true, runValidators: true});
-
+    
     res.status(200).json({
         status: 'success',
         data: {

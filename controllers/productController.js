@@ -26,6 +26,9 @@ exports.aliasTopGirls = (req, res, next) => {
 
 exports.createNewProduct = catchAsync(async (req, res, next) => {
         let image;
+        // console.log(req.body);
+        // console.log(req.file);
+
         if(req.file){
            await cloudinary.uploader
             .upload(req.file.path, { folder: 'my_uploads'})
@@ -187,3 +190,19 @@ exports.getKeywordSearch = async (req, res) => {
         })
     }
 }
+
+
+exports.deleteOneProduct = catchAsync(async (req, res, next) => {
+    if(req.user.role !== 'admin') {
+        return res.status(402).json({
+            status: 'Fail',
+            message: 'you not have a permision'
+        });
+    }
+    const del = await Product.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+})

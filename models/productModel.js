@@ -4,7 +4,7 @@ const validator = require('validator');
 
 const prodSchema = new mongoose.Schema({
      title: String,
-     photo: String,
+     photo: { type:String, required: [true, 'product should be a image picture']},
      userID: String,
      description: String,
      categories: String,

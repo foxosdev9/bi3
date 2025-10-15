@@ -25,5 +25,6 @@ router
    .route('/:id')
    .patch(productController.upDateProduct)
    .get(productController.getOneProduct)
+   .delete(authController.protect, productController.deleteOneProduct);
 
 module.exports = router;
