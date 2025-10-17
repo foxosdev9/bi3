@@ -10,6 +10,7 @@ const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/userRouter');
 const productRouter = require('./routes/productRouter');
 const messageRouter = require('./routes/messageRouter');
+const reelsRouter = require('./routes/reelsRouter');
 
 if(process.env.NODE_ENV === 'developement') app.use(morgan('dev'));
 //"https://bi3-morocco.netlify.app"
@@ -27,6 +28,7 @@ app.use(express.urlencoded({extended: false}));
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/messages', messageRouter);
+app.use('/api/v2/reels', reelsRouter);
 
 
 app.get('/favicons', (req, res) => res.status(204));
